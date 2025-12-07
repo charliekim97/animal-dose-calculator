@@ -1,86 +1,129 @@
-# 🧬 Animal Dose Calculator (BIDMC)
+# Animal Dose Calculator
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://animal-dose-calculator-gnzvmycdthxhgxxszd2mmr.streamlit.app/)
-[![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+Streamlit-based calculator for **human → mouse/rat dose translation** in metabolic experiments.
 
-> **A lab-focused web application to make preclinical dosing design more rigorous, transparent, and reproducible.**
+This tool was built to solve a recurring problem in a metabolism/endocrinology lab:
+
+> Every time we designed an animal experiment starting from a human regimen,
+> we re-did the same allometric conversions and dose calculations by hand,
+> often with slightly different assumptions.
+
+I designed and implemented this calculator to standardize that process and to embed
+**clinical pharmacology logic** directly into routine wet-lab work.
 
 ---
 
-## 🔗 Live Demo
-**Click here to use the tool:** 👉 **[Launch Metabolic Dose Calculator](https://animal-dose-calculator-gnzvmycdthxhgxxszd2mmr.streamlit.app/)**
+## 🔍 Motivation & Scientific Context
+
+In translational metabolism projects (insulin signaling, hepatokines, PPAR agonists, etc.),
+dose selection for mice or other species is often based on:
+
+- Copying doses from previous papers without clearly stated assumptions  
+- Simple mg/kg rules that ignore species differences in exposure  
+- One-off Excel sheets that are hard to reproduce or audit later  
+
+That leads to issues such as:
+
+- Weak or opaque justification in Methods / reviewer questions  
+- New trainees repeatedly re-deriving the same calculations  
+- Inconsistent dosing logic across projects within the same division  
+
+As a PharmD student embedded in a basic science lab, my goal was to contribute something concrete that:
+
+1. Starts from **human dosing logic** (regimen, exposure, mg/kg/day)  
+2. Applies **allometric scaling** in a consistent, documented way  
+3. Produces outputs that can be directly dropped into protocols and manuscripts  
+
+This project is part of a broader effort to **bridge pharmacy training and metabolic research**.
 
 ---
 
-## 🔍 Motivation & Context
-This tool was built to solve a specific problem encountered in the **Division of Endocrinology, Diabetes and Metabolism at BIDMC**: 
+## ✨ What the Tool Does
 
-Every time we designed an animal experiment based on human data (e.g., insulin signaling, hepatokines, PPAR agonists), we were re-deriving the same allometric conversions and dose calculations by hand. This led to:
-* **Inconsistency:** Simplistic mg/kg rules that ignore species differences in exposure.
-* **"Black Box" Methods:** One-off Excel sheets that are hard to audit or reproduce later.
-* **Reviewer Concerns:** Difficulty in justifying dose selection logic in manuscripts.
+**Core capabilities**
 
-As a **PharmD candidate embedded in a basic science lab**, I designed this calculator to bridge **clinical pharmacology thinking** with day-to-day wet-lab work.
+- Human → mouse/rat dose translation using:
+  - Human dose in mg/day or mg/kg
+  - Assumed human body weight
+  - Species-specific Km factors for allometric scaling
+- Per-animal outputs:
+  - mg/kg per dose
+  - Absolute mg per injection / gavage, based on animal weight
+  - Optional injection volume (if concentration is known)
 
-## ✨ Key Features
+**Designed for real lab use**
 
-### 1. Rigorous Translation Logic
-* **FDA HED Scaling:** Implements *Body Surface Area (BSA)* normalization (using Km factors) to convert Human Doses to Mouse/Rat Equivalent Doses scientifically.
-* **Clinical Regimen Input:** Allows input of human doses in `mg/day` or `mg/kg`, converting them to standardized animal protocols.
+- Simple web UI with **Streamlit**  
+- Can be run locally by anyone with Python  
+- Logic written to be easily extended to:
+  - Additional species
+  - Specific test types (e.g. ITT, GTT)
+  - Project-specific templates
 
-### 2. Lab-Optimized Presets
-* **Metabolic Specifics:** Pre-loaded protocols for common assays:
-    * **GTT (Glucose Tolerance Test)**
-    * **ITT (Insulin Tolerance Test)**
-    * **SGLT2 inhibitors / TZDs**
-* **Safety First:** Automatic alerts for injection volumes exceeding safe limits (e.g., >500µL IP) to prevent experimental error.
+---
 
-### 3. Transparent Output
-* Generates outputs ready for **IACUC protocols** and **Manuscript Methods**.
-* Explicitly displays all assumptions (Species, Km, Route) to ensure reproducibility.
+## 🌐 Live Demo
+
+You can try the app in a browser (no installation required):
+
+> **Live app:**  
+> https://animal-dose-calculator-gnzvmycdthxhgxxszd2mmr.streamlit.app/
 
 ---
 
 ## 🧠 Scientific Logic (High-Level)
-The calculator follows a 3-step pharmacological approach:
 
-1.  **Normalize Human Regimen:** Converts clinical inputs (e.g., 30 mg QD) into a standardized `mg/kg/day` exposure.
-2.  **Apply Allometric Scaling:** Uses FDA-recommended **Km factors** (Human=37, Mouse=3, Rat=6) to estimate equivalent animal exposure.
-3.  **Translate to Animal Dose:** Computes the final `mg/kg` and `Injection Volume (µL)` based on individual animal weight and stock concentration.
+The calculator follows three main steps:
 
-> *Reference: FDA Guidance for Industry: Estimating the Maximum Safe Starting Dose in Initial Clinical Trials for Therapeutics in Adult Healthy Volunteers.*
+1. **Normalize human regimen**
+
+   Example inputs:  
+   - 30 mg once daily in a 70 kg adult  
+   - 0.4 mg/kg bolus  
+
+   Convert to a standardized **mg/kg/day** human exposure.
+
+2. **Apply allometric scaling**
+
+   - Use commonly accepted **Km factors** to estimate the corresponding exposure in mice or rats  
+   - Make the scaling step explicit so it can be defended in protocols and peer review
+
+3. **Translate to animal-ready dose**
+
+   For each animal (given species + body weight):
+
+   - Compute mg/kg per dose  
+   - Convert to mg per injection / gavage  
+   - Optionally compute volume based on solution concentration  
+
+The goal is not to replace full PK modeling, but to make routine dose translation
+**faster, safer, and more transparent** for standard metabolic experiments.
 
 ---
 
-## 🖼 Preview
-*(Screenshot of the application interface)*
+## 🧪 Example Use Cases
 
-![Animal Dose Calculator UI](assets/Screenshot.png)
-*(Note: Please ensure an image file named `Screenshot.png` is inside an `assets` folder in your repository)*
+- Designing **insulin tolerance tests (ITT)** or **glucose tolerance tests (GTT)**  
+  - Align doses with clinically meaningful ranges  
+  - Scale appropriately across strains and body weights  
+
+- Translating **PPARγ agonists or other metabolic drugs** from human therapeutic ranges to mice  
+
+- Standardizing dosing across:
+  - Multiple projects within an endocrinology division  
+  - New trainees joining the lab  
+  - Longitudinal series of related experiments  
+
+Because the full calculation path is visible, this tool also helps when writing Methods
+or answering reviewer questions about dose rationale.
 
 ---
 
-## ⚙️ Tech Stack & Installation
-I wrote the entire application (logic + UI) using Python.
-
-* **Language:** Python 3.9+
-* **Framework:** Streamlit
-* **Deployment:** Streamlit Cloud
-
-### Local Installation
-If you prefer running it locally instead of using the web link:
+## ⚙️ How to Run Locally
 
 ```bash
-# 1. Clone the repository
-git clone [https://github.com/charliekim97/animal-dose-calculator.git](https://github.com/charliekim97/animal-dose-calculator.git)
-cd animal-dose-calculator
-
-# 2. Install dependencies
-pip install -r requirements.txt
-
-# 3. Run the app
-streamlit run animalcalculator.py
+python3 -m pip install streamlit
+python3 -m streamlit run animalcalculator.py
 ```
 
 ---
