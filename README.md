@@ -130,8 +130,7 @@ python3 -m streamlit run animalcalculator.py
 
 ## 👤 Author
 
-**Sangeon (Charles) Kim, PharmD candidate**
-- PharmD Program, MCPHS University (Boston)
+**Sangeon (Charles) Kim**
 - Research trainee, Division of Endocrinology, Diabetes and Metabolism, Beth Israel Deaconess Medical Center / Harvard Medical School
 - **Research focus:** metabolic signaling, hepatokines, insulin resistance, and translational experimental design
 
